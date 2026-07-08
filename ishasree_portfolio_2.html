@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ishasree B — Aerospace Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #07090D;
+    --bg2: #0C1016;
+    --panel: rgba(255,255,255,0.035);
+    --panel-strong: rgba(255,255,255,0.055);
+    --line: rgba(255,255,255,0.09);
+    --text: #EDF0F3;
+    --muted: #9AA5B1;
+    --faint: #5B6672;
+    --flare: #FF7A3D;
+    --flare2: #FFB35C;
+    --cyan: #4FD8E0;
+    --violet: #8B7CF6;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.65;
+    overflow-x:hidden;
+    position:relative;
+  }
+  ::selection{ background:var(--flare); color:#07090D; }
+  a{ color:inherit; text-decoration:none; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  .display{ font-family:'Space Grotesk', sans-serif; }
+
+  /* ===== BACKGROUND LAYERS ===== */
+  #stars{ position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+  .nebula{
+    position:fixed; border-radius:50%; filter:blur(110px); z-index:0; pointer-events:none;
+    opacity:0.35; mix-blend-mode:screen;
+  }
+  .nebula-1{ width:640px; height:640px; background:radial-gradient(circle, var(--flare), transparent 70%); top:-200px; left:-180px; animation: drift1 26s ease-in-out infinite; }
+  .nebula-2{ width:560px; height:560px; background:radial-gradient(circle, var(--violet), transparent 70%); top:30%; right:-220px; animation: drift2 30s ease-in-out infinite; }
+  .nebula-3{ width:500px; height:500px; background:radial-gradient(circle, var(--cyan), transparent 70%); bottom:-160px; left:20%; animation: drift3 34s ease-in-out infinite; }
+
+  @keyframes drift1{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(60px,80px); } }
+  @keyframes drift2{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(-70px,60px); } }
+  @keyframes drift3{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(50px,-60px); } }
+
+  #cursor-glow{
+    position:fixed; width:420px; height:420px; border-radius:50%; pointer-events:none; z-index:1;
+    background:radial-gradient(circle, rgba(255,122,61,0.06), transparent 70%);
+    transform:translate(-50%,-50%);
+    transition:opacity 0.3s;
+  }
+
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 32px; position:relative; z-index:2; }
+
+  /* ===== SCROLL PROGRESS ===== */
+  #progress{
+    position:fixed; top:0; left:0; height:2px; background:linear-gradient(90deg, var(--flare), var(--cyan));
+    z-index:100; width:0%; box-shadow:0 0 8px var(--flare);
+  }
+
+  /* ===== NAV ===== */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(7,9,13,0.7);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .nav-id{ font-family:'Space Grotesk'; font-weight:600; font-size:15px; letter-spacing:0.02em; }
+  .nav-id span{ color:var(--flare); }
+  .nav-links{ display:flex; gap:30px; }
+  .nav-links a{
+    font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--muted); position:relative; padding-bottom:4px;
+  }
+  .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:0; height:1px; width:0%;
+    background:linear-gradient(90deg,var(--flare),var(--flare2));
+    transition:width 0.3s ease;
+  }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-links a:hover::after{ width:100%; }
+
+  /* ===== REVEAL ===== */
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible{ opacity:1; transform:translateY(0); }
+  .reveal-stagger .reveal:nth-child(1){ transition-delay:0.05s; }
+  .reveal-stagger .reveal:nth-child(2){ transition-delay:0.12s; }
+  .reveal-stagger .reveal:nth-child(3){ transition-delay:0.19s; }
+  .reveal-stagger .reveal:nth-child(4){ transition-delay:0.26s; }
+  .reveal-stagger .reveal:nth-child(5){ transition-delay:0.33s; }
+  .reveal-stagger .reveal:nth-child(6){ transition-delay:0.4s; }
+
+  /* ===== HERO ===== */
+  header.hero{
+    position:relative; padding:130px 0 100px; overflow:hidden;
+  }
+  .hero-tag{
+    font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.15em; color:var(--flare2);
+    text-transform:uppercase; display:flex; align-items:center; gap:10px; margin-bottom:30px;
+  }
+  .hero-tag::before{
+    content:""; width:8px; height:8px; background:var(--flare); border-radius:50%;
+    box-shadow:0 0 14px 2px var(--flare);
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.4; transform:scale(0.85);} }
+
+  h1.name{
+    font-family:'Space Grotesk'; font-weight:700;
+    font-size:clamp(40px, 7vw, 80px);
+    line-height:1.04; letter-spacing:-0.02em;
+    max-width:840px;
+  }
+  h1.name .line{ display:block; overflow:hidden; }
+  h1.name .line span{ display:inline-block; animation: rise 0.9s cubic-bezier(.16,1,.3,1) both; }
+  h1.name .line:nth-child(1) span{ animation-delay:0.05s; }
+  h1.name .line:nth-child(2) span{ animation-delay:0.18s; }
+  @keyframes rise{ from{ transform:translateY(110%); } to{ transform:translateY(0); } }
+
+  .name .accent{
+    background:linear-gradient(90deg, var(--flare), var(--flare2), var(--flare));
+    background-size:200% auto;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation: shimmer 5s linear infinite;
+  }
+  @keyframes shimmer{ to{ background-position:200% center; } }
+
+  .hero-sub{ max-width:600px; margin-top:26px; color:var(--muted); font-size:17px; }
+
+  .hero-meta{ display:flex; flex-wrap:wrap; gap:32px; margin-top:44px; font-family:'IBM Plex Mono'; font-size:12.5px; color:var(--faint); }
+  .hero-meta div{ display:flex; flex-direction:column; gap:5px; }
+  .hero-meta b{ color:var(--text); font-weight:500; }
+
+  .hero-links{ display:flex; gap:14px; margin-top:42px; flex-wrap:wrap; }
+  .btn{
+    font-family:'IBM Plex Mono'; font-size:12.5px; letter-spacing:0.05em;
+    padding:12px 22px; border:1px solid var(--line); border-radius:30px;
+    display:inline-flex; align-items:center; gap:8px; transition:all 0.25s ease;
+    background:var(--panel); backdrop-filter:blur(8px);
+  }
+  .btn:hover{ border-color:var(--flare); color:var(--flare2); transform:translateY(-2px); box-shadow:0 8px 24px -8px rgba(255,122,61,0.4); }
+  .btn.primary{ background:linear-gradient(135deg, var(--flare), #E85A2A); border-color:transparent; color:#07090D; font-weight:600; }
+  .btn.primary:hover{ box-shadow:0 8px 28px -6px rgba(255,122,61,0.55); color:#07090D; }
+
+  .schlieren{ position:absolute; right:-6%; top:52%; transform:translateY(-50%); width:640px; max-width:58vw; opacity:0.95; pointer-events:none; }
+  .schlieren .flow{ animation: flowmove 6s linear infinite; }
+  @keyframes flowmove{ 0%{ stroke-dashoffset:0; } 100%{ stroke-dashoffset:-120; } }
+  @media (max-width:900px){ .schlieren{ display:none; } }
+
+  .scroll-cue{
+    position:absolute; bottom:28px; left:32px; display:flex; align-items:center; gap:10px;
+    font-family:'IBM Plex Mono'; font-size:11px; color:var(--faint); letter-spacing:0.1em;
+  }
+  .scroll-cue .dot{ width:1px; height:26px; background:linear-gradient(var(--faint), transparent); position:relative; overflow:hidden; }
+  .scroll-cue .dot::after{ content:""; position:absolute; top:-30px; left:0; width:100%; height:30%; background:var(--flare2); animation: scrolldrip 2s ease-in-out infinite; }
+  @keyframes scrolldrip{ 0%{ top:-30%; } 100%{ top:100%; } }
+
+  /* ===== SECTION SHELL ===== */
+  section{ padding:100px 0; position:relative; z-index:2; }
+  .sec-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:52px; }
+  .sec-num{ font-family:'IBM Plex Mono'; color:var(--flare); font-size:13px; }
+  .sec-title{ font-family:'Space Grotesk'; font-weight:600; font-size:30px; letter-spacing:-0.01em; }
+  .sec-rule{ flex:1; height:1px; background:linear-gradient(90deg, var(--line), transparent); }
+
+  /* ===== OBJECTIVE ===== */
+  .objective-panel{
+    background:linear-gradient(135deg, var(--panel-strong), var(--panel));
+    border:1px solid var(--line); border-radius:var(--radius);
+    padding:40px 44px; position:relative; overflow:hidden;
+  }
+  .objective-panel::before{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
+    background:linear-gradient(var(--flare), var(--violet));
+  }
+  .objective-panel p{ font-size:18px; color:var(--text); max-width:760px; }
+  .objective-panel .label{ font-family:'IBM Plex Mono'; font-size:11px; color:var(--flare2); letter-spacing:0.12em; margin-bottom:16px; text-transform:uppercase; }
+
+  /* ===== EDUCATION ===== */
+  .edu-item{
+    display:grid; grid-template-columns:140px 1fr auto; gap:24px; align-items:center;
+    padding:24px 26px; border-radius:12px; margin-bottom:2px;
+    transition:background 0.3s ease, transform 0.3s ease;
+  }
+  .edu-item:hover{ background:var(--panel); transform:translateX(6px); }
+  .edu-date{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--faint); }
+  .edu-name{ font-family:'Space Grotesk'; font-weight:600; font-size:17px; }
+  .edu-loc{ color:var(--muted); font-size:14px; margin-top:4px; }
+  .edu-grade{ font-family:'IBM Plex Mono'; font-size:13px; color:var(--cyan); white-space:nowrap; }
+  @media (max-width:640px){ .edu-item{ grid-template-columns:1fr; gap:6px; } }
+
+  /* ===== PROJECTS ===== */
+  .proj-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
+  @media (max-width:760px){ .proj-grid{ grid-template-columns:1fr; } }
+  .proj-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:30px 28px; display:flex; flex-direction:column; gap:14px;
+    transition:transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    position:relative; overflow:hidden;
+  }
+  .proj-card::before{
+    content:""; position:absolute; inset:0; opacity:0; transition:opacity 0.35s ease;
+    background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%), rgba(255,122,61,0.12), transparent 60%);
+  }
+  .proj-card:hover::before{ opacity:1; }
+  .proj-card:hover{ transform:translateY(-6px); border-color:rgba(255,122,61,0.4); box-shadow:0 20px 40px -20px rgba(0,0,0,0.6); background:var(--panel-strong); }
+  .proj-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; z-index:1; }
+  .proj-title{ font-family:'Space Grotesk'; font-weight:600; font-size:17px; line-height:1.3; }
+  .proj-date{ font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--faint); white-space:nowrap; padding-top:3px; }
+  .proj-desc{ color:var(--muted); font-size:14.5px; z-index:1; }
+  .proj-tools{ display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:6px; z-index:1; }
+  .tool-chip{
+    font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--cyan);
+    border:1px solid rgba(79,216,224,0.25); padding:4px 11px; border-radius:20px; background:rgba(79,216,224,0.06);
+    transition:all 0.25s ease;
+  }
+  .proj-card:hover .tool-chip{ border-color:rgba(255,122,61,0.35); color:var(--flare2); background:rgba(255,122,61,0.08); }
+
+  /* ===== EXPERIENCE ===== */
+  .exp-item{
+    display:grid; grid-template-columns:180px 1fr; gap:32px; padding:30px 26px; border-radius:12px;
+    transition:background 0.3s ease;
+    position:relative;
+  }
+  .exp-item:hover{ background:var(--panel); }
+  .exp-item::before{
+    content:""; position:absolute; left:158px; top:36px; width:8px; height:8px; border-radius:50%;
+    background:var(--flare); box-shadow:0 0 0 4px rgba(255,122,61,0.15);
+  }
+  .exp-date{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--flare2); }
+  .exp-role{ font-family:'Space Grotesk'; font-weight:600; font-size:18px; }
+  .exp-org{ color:var(--muted); font-size:14px; margin:4px 0 14px; }
+  .exp-item ul{ list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .exp-item li{ font-size:14.5px; color:var(--text); padding-left:18px; position:relative; }
+  .exp-item li::before{ content:"—"; position:absolute; left:0; color:var(--faint); }
+  @media (max-width:640px){ .exp-item{ grid-template-columns:1fr; gap:8px; } .exp-item::before{ display:none; } }
+
+  /* ===== SKILLS ===== */
+  .skill-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  @media (max-width:760px){ .skill-grid{ grid-template-columns:repeat(2,1fr); } }
+  .skill-block{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:26px 22px;
+    transition:transform 0.3s ease, border-color 0.3s ease;
+  }
+  .skill-block:hover{ transform:translateY(-4px); border-color:rgba(139,124,246,0.4); }
+  .skill-block .label{ font-family:'IBM Plex Mono'; font-size:10.5px; letter-spacing:0.08em; color:var(--violet); text-transform:uppercase; margin-bottom:14px; }
+  .skill-block .items{ font-size:14px; color:var(--text); line-height:2; }
+
+  /* ===== ACHIEVEMENTS ===== */
+  .ach-list{ display:flex; flex-direction:column; gap:2px; }
+  .ach-item{ display:flex; gap:20px; padding:20px 22px; align-items:flex-start; border-radius:12px; transition:background 0.3s ease; }
+  .ach-item:hover{ background:var(--panel); }
+  .ach-mark{ font-family:'IBM Plex Mono'; color:var(--flare); font-size:13px; padding-top:2px; min-width:24px; }
+  .ach-text{ font-size:14.5px; color:var(--text); }
+  .ach-text b{ font-family:'Space Grotesk'; font-weight:600; }
+
+  /* ===== LEADERSHIP ===== */
+  .lead-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  @media (max-width:760px){ .lead-grid{ grid-template-columns:1fr; } }
+  .lead-card{
+    border:1px solid var(--line); border-radius:var(--radius); padding:26px; background:var(--panel);
+    transition:transform 0.3s ease, border-color 0.3s ease;
+  }
+  .lead-card:hover{ transform:translateY(-4px); border-color:rgba(79,216,224,0.4); }
+  .lead-role{ font-family:'Space Grotesk'; font-weight:600; font-size:15.5px; }
+  .lead-org{ color:var(--flare2); font-size:12.5px; font-family:'IBM Plex Mono'; margin:6px 0 12px; }
+  .lead-card p{ color:var(--muted); font-size:13.5px; }
+
+  /* ===== STATS STRIP ===== */
+  .stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; }
+  @media (max-width:760px){ .stats{ grid-template-columns:repeat(2,1fr); } }
+  .stat{ background:var(--bg2); padding:30px 20px; text-align:center; }
+  .stat .num{ font-family:'Space Grotesk'; font-weight:700; font-size:34px; background:linear-gradient(90deg,var(--flare2),var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .stat .lbl{ font-family:'IBM Plex Mono'; font-size:11px; color:var(--faint); margin-top:6px; letter-spacing:0.05em; }
+
+  /* ===== FOOTER ===== */
+  footer{ padding:110px 0 60px; text-align:center; position:relative; z-index:2; }
+  footer .display{ font-size:clamp(30px,5vw,54px); font-weight:600; margin-bottom:20px; }
+  footer .hero-sub{ margin:0 auto 44px; text-align:center; }
+  .foot-links{ display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-bottom:60px; }
+  .foot-bottom{ font-family:'IBM Plex Mono'; font-size:11px; color:var(--faint); }
+  .lang-strip{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:22px; }
+  .lang-chip{ font-family:'IBM Plex Mono'; font-size:11px; color:var(--muted); border:1px solid var(--line); padding:5px 14px; border-radius:20px; }
+
+  @media (max-width:640px){
+    .nav-links{ display:none; }
+    .wrap{ padding:0 20px; }
+    section{ padding:72px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<canvas id="stars"></canvas>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+<div id="cursor-glow"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-id">ISHASREE<span>.</span>B</div>
+    <div class="nav-links">
+      <a href="#education">Education</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-tag mono">Aerospace Engineering · B.Tech, Class of 2026</div>
+    <h1 class="name display">
+      <span class="line"><span>Ishasree B —</span></span>
+      <span class="line"><span>propulsion &amp; <span class="accent">high-speed flow.</span></span></span>
+    </h1>
+    <p class="hero-sub reveal visible" style="transition-delay:0.5s;">Aspiring aerospace engineer working across scramjet CFD, reactive-flow combustion, and computational astrophysics. Currently a project intern at IISc Bangalore, studying swirling flow in gas turbine combustors.</p>
+
+    <div class="hero-links reveal visible" style="transition-delay:0.6s;">
+      <a class="btn primary" href="mailto:ishasreeb615@gmail.com">Email — ishasreeb615@gmail.com</a>
+      <a class="btn" href="https://github.com/IshasreeB" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="btn" href="https://linkedin.com/in/ishasree-b-40a980287" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+
+    <div class="hero-meta reveal visible" style="transition-delay:0.7s;">
+      <div><b>SASTRA Deemed University</b>Thanjavur, India · CGPA 8.27/10</div>
+      <div><b>Based in</b>Hosur, Tamil Nadu</div>
+      <div><b>Currently</b>Project Intern, IISc Bangalore</div>
+    </div>
+  </div>
+
+  <svg class="schlieren" viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="shockGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#FF7A3D" stop-opacity="0"/>
+        <stop offset="50%" stop-color="#FF7A3D" stop-opacity="0.75"/>
+        <stop offset="100%" stop-color="#FF7A3D" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polygon points="60,250 260,190 260,310" fill="none" stroke="#5B6672" stroke-width="1.5"/>
+    <g stroke-width="1.6" fill="none">
+      <path d="M260,190 L560,40" stroke="url(#shockGrad)"/>
+      <path d="M260,310 L560,460" stroke="url(#shockGrad)"/>
+      <path d="M300,220 L580,90" stroke="#4FD8E0" stroke-opacity="0.4"/>
+      <path d="M300,280 L580,410" stroke="#4FD8E0" stroke-opacity="0.4"/>
+    </g>
+    <g fill="none" stroke="#FF7A3D" stroke-opacity="0.6" stroke-width="1.2">
+      <path d="M300,250 L340,225 L380,250 L340,275 Z"/>
+      <path d="M380,250 L415,230 L450,250 L415,270 Z" stroke-opacity="0.45"/>
+      <path d="M450,250 L480,235 L510,250 L480,265 Z" stroke-opacity="0.3"/>
+    </g>
+    <g class="flow" stroke="#8B98A5" stroke-opacity="0.35" stroke-width="1" fill="none" stroke-dasharray="6 8">
+      <path d="M20,150 C150,150 200,170 260,190 S 450,220 590,180"/>
+      <path d="M20,350 C150,350 200,330 260,310 S 450,280 590,320"/>
+      <path d="M20,250 C200,250 350,250 590,250" stroke-opacity="0.5"/>
+    </g>
+    <circle cx="340" cy="250" r="3" fill="#FF7A3D">
+      <animate attributeName="opacity" values="1;0.15;1" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="2.5;4;2.5" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+  </svg>
+
+  <div class="scroll-cue"><div class="dot"></div>SCROLL</div>
+</header>
+
+<main class="wrap">
+
+  <section id="objective">
+    <div class="sec-head reveal"><span class="sec-num mono">00</span><span class="sec-title display">Objective</span><div class="sec-rule"></div></div>
+    <div class="objective-panel reveal">
+      <div class="label">Mission statement</div>
+      <p>Passionate about astronautics, propulsion, and computational aerodynamics — dedicated to advancing expertise in high-speed flow simulations, space propulsion, and sustainable space systems design through research, technical exploration, and interdisciplinary collaboration.</p>
+    </div>
+  </section>
+
+  <section id="stats-section">
+    <div class="stats reveal">
+      <div class="stat"><div class="num" data-count="8.27">0</div><div class="lbl">CGPA / 10.00</div></div>
+      <div class="stat"><div class="num" data-count="200" data-suffix="+">0</div><div class="lbl">EVENT PARTICIPANTS LED</div></div>
+      <div class="stat"><div class="num" data-count="6">0</div><div class="lbl">PROJECTS</div></div>
+      <div class="stat"><div class="num" data-count="3">0</div><div class="lbl">CONFERENCE PRESENTATIONS</div></div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="sec-head reveal"><span class="sec-num mono">01</span><span class="sec-title display">Education</span><div class="sec-rule"></div></div>
+
+    <div class="edu-item reveal">
+      <div class="edu-date mono">2022 — 2026</div>
+      <div>
+        <div class="edu-name">B.Tech, Aerospace Engineering <span style="color:var(--muted); font-weight:400; font-size:14px;">— minor in Cyber Security &amp; IoT</span></div>
+        <div class="edu-loc">SASTRA Deemed University, Thanjavur, India</div>
+      </div>
+      <div class="edu-grade">CGPA 8.27 / 10.00</div>
+    </div>
+
+    <div class="edu-item reveal">
+      <div class="edu-date mono">2022</div>
+      <div>
+        <div class="edu-name">HSC</div>
+        <div class="edu-loc">Ashok Leyland School, Hosur, India</div>
+      </div>
+      <div class="edu-grade">89.6%</div>
+    </div>
+
+    <div class="edu-item reveal">
+      <div class="edu-date mono">2020</div>
+      <div>
+        <div class="edu-name">SSLC</div>
+        <div class="edu-loc">Ashok Leyland School, Hosur, India</div>
+      </div>
+      <div class="edu-grade">93%</div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="sec-head reveal"><span class="sec-num mono">02</span><span class="sec-title display">Projects</span><div class="sec-rule"></div></div>
+
+    <div class="proj-grid reveal-stagger">
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <div class="proj-title">Computational Analysis of Flow Modes in Scramjet Inlets</div>
+          <div class="proj-date mono">OCT 24 – MAY 25</div>
+        </div>
+        <div class="proj-desc">CFD simulations studying shock wave formation and unsteady flow modes at high Mach numbers.</div>
+        <div class="proj-tools"><span class="tool-chip">ANSYS Fluent</span><span class="tool-chip">MATLAB</span><span class="tool-chip">Tecplot</span></div>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <div class="proj-title">Reactive Flow Simulation in Scramjet Engine</div>
+          <div class="proj-date mono">FEB – JUN 25</div>
+        </div>
+        <div class="proj-desc">Simulated hydrogen–air supersonic combustion via CHEMKIN-coupled ANSYS Fluent; analyzed flame stability, shock interactions and thermal effects. Presented at IIST Conference 2025.</div>
+        <div class="proj-tools"><span class="tool-chip">ANSYS</span><span class="tool-chip">CHEMKIN</span></div>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <div class="proj-title">Smart Traffic System for Emergency Vehicles</div>
+          <div class="proj-date mono">JUL – DEC 24</div>
+        </div>
+        <div class="proj-desc">IoT-based smart traffic control enabling real-time signal prioritization for emergency vehicles over LoRa.</div>
+        <div class="proj-tools"><span class="tool-chip">ESP32</span><span class="tool-chip">LoRa</span><span class="tool-chip">Arduino IDE</span></div>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <div class="proj-title">Cloud-Integrated Structural Health Monitoring</div>
+          <div class="proj-date mono">JUL – OCT 25</div>
+        </div>
+        <div class="proj-desc">Real-time vibration monitoring on a cantilever beam simulating an aircraft wing structure, streamed to the cloud.</div>
+        <div class="proj-tools"><span class="tool-chip">ESP32</span><span class="tool-chip">ThingSpeak</span><span class="tool-chip">Sensors</span></div>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <div class="proj-title">Estimation of Dynamical Mass of a Galaxy Cluster</div>
+          <div class="proj-date mono">JUN – JUL 25</div>
+        </div>
+        <div class="proj-desc">Python-based astrophysical analysis on SDSS datasets to estimate luminous and dark matter distributions.</div>
+        <div class="proj-tools"><span class="tool-chip">Python</span><span class="tool-chip">SDSS Sky Server</span></div>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <div class="proj-title">Narrowband Imaging</div>
+          <div class="proj-date mono">JUL – AUG 25</div>
+        </div>
+        <div class="proj-desc">Analyzed JWST narrowband images (F444W, F335M, F187N) to investigate star formation signatures; stacking/alignment in Siril, color mapping in GIMP.</div>
+        <div class="proj-tools"><span class="tool-chip">Siril</span><span class="tool-chip">GIMP</span><span class="tool-chip">FITS</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="sec-head reveal"><span class="sec-num mono">03</span><span class="sec-title display">Experience</span><div class="sec-rule"></div></div>
+
+    <div class="exp-item reveal">
+      <div class="exp-date mono">JAN 2026 — CURRENT</div>
+      <div>
+        <div class="exp-role">Project Intern</div>
+        <div class="exp-org">Indian Institute of Science, Bangalore</div>
+        <ul>
+          <li>Major project on the effect of dilution air on upstream swirling flow in a gas turbine combustor under atmospheric conditions.</li>
+          <li>Investigated turbulence–chemistry interaction, flame structure, and flow behavior under reacting-flow conditions.</li>
+          <li>Used CHEMKIN and MATLAB for post-processing, visualization, and data-driven analysis of simulation datasets.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-date mono">JUN — JUL 2025</div>
+      <div>
+        <div class="exp-role">Student Intern — Astronomy &amp; Astrophysics Summer School</div>
+        <div class="exp-org">Indian Space Academy (ISA)</div>
+        <ul>
+          <li>Used spectroscopic data from SDSS to study member galaxies, calculate velocity dispersion, and estimate cluster dynamical mass versus luminous mass to explore dark matter.</li>
+          <li>Built a real-time ISS tracker in Python integrating orbital mechanics, geospatial data, and interactive visualization.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="sec-head reveal"><span class="sec-num mono">04</span><span class="sec-title display">Skills</span><div class="sec-rule"></div></div>
+    <div class="skill-grid reveal-stagger">
+      <div class="skill-block reveal">
+        <div class="label">Programming</div>
+        <div class="items">Python<br>C++<br>C</div>
+      </div>
+      <div class="skill-block reveal">
+        <div class="label">Simulation</div>
+        <div class="items">ANSYS Fluent<br>CHEMKIN<br>MATLAB<br>Tecplot<br>Mechanical APDL</div>
+      </div>
+      <div class="skill-block reveal">
+        <div class="label">AI / ML</div>
+        <div class="items">TensorFlow<br>Scikit-learn<br>Pandas<br>NumPy</div>
+      </div>
+      <div class="skill-block reveal">
+        <div class="label">IoT &amp; Comms</div>
+        <div class="items">Arduino IDE<br>LoRa<br>ThingSpeak</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="achievements">
+    <div class="sec-head reveal"><span class="sec-num mono">05</span><span class="sec-title display">Achievements</span><div class="sec-rule"></div></div>
+    <div class="ach-list">
+      <div class="ach-item reveal">
+        <div class="ach-mark mono">01</div>
+        <div class="ach-text"><b>1st Prize</b> — Industry-Academia Conclave 2023, Aeronautical Society of India, Chennai. Essay: "Aqua Fission Rocket."</div>
+      </div>
+      <div class="ach-item reveal">
+        <div class="ach-mark mono">02</div>
+        <div class="ach-text"><b>Conference Presentation</b> — "CFD Analysis of Transient Flow Modes in Scramjet Inlets," ICGNMS 2026, B.S. Abdur Rahman Crescent Institute of Science and Technology.</div>
+      </div>
+      <div class="ach-item reveal">
+        <div class="ach-mark mono">03</div>
+        <div class="ach-text"><b>Conference Presentation</b> — "Reactive Flow Simulation in Scramjet Engine using ANSYS-CHEMKIN," ASTRA '25, IIST.</div>
+      </div>
+      <div class="ach-item reveal">
+        <div class="ach-mark mono">04</div>
+        <div class="ach-text"><b>Performing arts</b> — 1st Prize Group Mime &amp; 1st Prize Duo Mime, Kuruksastra '24; 1st Prize Group Mime, Carpedium '24; 2nd Prize Solo Mime.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="leadership">
+    <div class="sec-head reveal"><span class="sec-num mono">06</span><span class="sec-title display">Leadership</span><div class="sec-rule"></div></div>
+    <div class="lead-grid reveal-stagger">
+      <div class="lead-card reveal">
+        <div class="lead-role">Events Head</div>
+        <div class="lead-org mono">STELLARIA — ASTRONOMY CLUB, SASTRA · MAY 2025 – PRESENT</div>
+        <p>Contributed to student-led space science projects — rocketry, narrowband imaging, magnetic reconnection, and ML-based redshift prediction. Organized workshops, guest lectures, and public outreach events.</p>
+      </div>
+      <div class="lead-card reveal">
+        <div class="lead-role">Vice Chair — DAKSH</div>
+        <div class="lead-org mono">SASTRA DEEMED UNIVERSITY · JUN 2025 – PRESENT</div>
+        <p>Supervised multi-department coordination and managed 200+ participants across university-level technical and cultural events.</p>
+      </div>
+      <div class="lead-card reveal">
+        <div class="lead-role">Joint Secretary</div>
+        <div class="lead-org mono">MECASSO, SASTRA · JUL 2023 – MAY 2024</div>
+        <p>Coordinated with SAE mentors and industry professionals on departmental symposiums and workshops; hosted and compered SAE and MECASSO programs.</p>
+      </div>
+      <div class="lead-card reveal">
+        <div class="lead-role">Mime Organizer</div>
+        <div class="lead-org mono">SASTRA TAMIL SANGAM (STS) · JUL 2025 – PRESENT</div>
+        <p>Managed and choreographed mime performances for intra- and inter-college competitions, guiding teams in creative direction and stage execution.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="interests">
+    <div class="sec-head reveal"><span class="sec-num mono">07</span><span class="sec-title display">Interests</span><div class="sec-rule"></div></div>
+    <div class="reveal" style="display:flex; flex-wrap:wrap; gap:10px;">
+      <span class="tool-chip">Space Propulsion</span>
+      <span class="tool-chip">Astronautics</span>
+      <span class="tool-chip">Combustion</span>
+      <span class="tool-chip">Computational Aerodynamics</span>
+      <span class="tool-chip">Astronomy</span>
+      <span class="tool-chip">Astrophysics</span>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="hero-tag mono reveal" style="justify-content:center;">Get in touch</div>
+    <div class="display reveal">Let's talk propulsion.</div>
+    <p class="hero-sub reveal">Open to research collaborations, internships, and conversations about scramjets, combustion, and everything in between.</p>
+    <div class="foot-links reveal">
+      <a class="btn primary" href="mailto:ishasreeb615@gmail.com">ishasreeb615@gmail.com</a>
+      <a class="btn" href="https://github.com/IshasreeB" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://linkedin.com/in/ishasree-b-40a980287" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <div class="lang-strip">
+      <span class="lang-chip">English</span><span class="lang-chip">Tamil</span><span class="lang-chip">Hindi</span><span class="lang-chip">Saurashtra</span>
+    </div>
+    <div class="foot-bottom" style="margin-top:48px;">Hosur, Tamil Nadu, India</div>
+  </div>
+</footer>
+
+<script>
+  // ---- Starfield ----
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let w, h, stars = [];
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight * (document.body.scrollHeight / window.innerHeight > 3 ? 1 : 1);
+    canvas.style.height = document.body.scrollHeight + 'px';
+    h = canvas.height = document.body.scrollHeight;
+    canvas.style.width = w + 'px';
+  }
+  function makeStars(){
+    stars = [];
+    const count = Math.floor((w*h)/9000);
+    for(let i=0;i<count;i++){
+      stars.push({
+        x: Math.random()*w,
+        y: Math.random()*h,
+        r: Math.random()*1.3 + 0.2,
+        baseAlpha: Math.random()*0.6 + 0.15,
+        speed: Math.random()*0.02 + 0.005,
+        phase: Math.random()*Math.PI*2
+      });
+    }
+  }
+  let t = 0;
+  function drawStars(){
+    ctx.clearRect(0,0,w,h);
+    for(const s of stars){
+      const alpha = s.baseAlpha + Math.sin(t*s.speed*10 + s.phase)*0.25;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(240,244,248,${Math.max(0,alpha)})`;
+      ctx.fill();
+    }
+    t += 1;
+    requestAnimationFrame(drawStars);
+  }
+  window.addEventListener('resize', ()=>{ resize(); makeStars(); });
+  resize(); makeStars(); drawStars();
+  // re-measure after content loads/fonts render
+  window.addEventListener('load', ()=>{ resize(); makeStars(); });
+
+  // ---- Cursor glow ----
+  const glow = document.getElementById('cursor-glow');
+  window.addEventListener('mousemove', (e)=>{
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = (e.clientY + window.scrollY) + 'px';
+  });
+
+  // ---- Project card spotlight ----
+  document.querySelectorAll('.proj-card').forEach(card=>{
+    card.addEventListener('mousemove', (e)=>{
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX-rect.left)+'px');
+      card.style.setProperty('--my', (e.clientY-rect.top)+'px');
+    });
+  });
+
+  // ---- Scroll reveal ----
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+
+  // ---- Scroll progress bar ----
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', ()=>{
+    const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    progress.style.width = scrolled + '%';
+  });
+
+  // ---- Animated counters ----
+  const counters = document.querySelectorAll('.num[data-count]');
+  const counterIO = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const el = entry.target;
+        const target = parseFloat(el.dataset.count);
+        const suffix = el.dataset.suffix || '';
+        const isDecimal = target % 1 !== 0;
+        let cur = 0;
+        const duration = 1400;
+        const start = performance.now();
+        function tick(now){
+          const p = Math.min((now-start)/duration, 1);
+          const eased = 1 - Math.pow(1-p, 3);
+          cur = target * eased;
+          el.textContent = (isDecimal ? cur.toFixed(2) : Math.floor(cur)) + suffix;
+          if(p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        counterIO.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(el=> counterIO.observe(el));
+</script>
+
+</body>
+</html>
